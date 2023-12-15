@@ -22,6 +22,32 @@ enum PaymentStatus {
   REFUNDED
 }
 
+model Image {
+  id String @id @default(uuid())
+  url String
+  entityId String
+  entityType String
+  created_at DateTime? @default(now())
+  updated_at DateTime? @default(now())
+
+  user User? @relation(fields: [userId], references: [id])
+  userId String?
+
+  store Store? @relation(fields: [storeId], references: [id])
+  storeId String?
+
+  product Product? @relation(fields: [productId], references: [id])
+  productId String?
+
+  review Review? @relation(fields: [reviewId], references: [id])
+  reviewId String?
+
+  delivery Delivery? @relation(fields: [deliveryId], references: [id])
+  deliveryId String?
+
+  @@map("images")
+}
+
 model User {
   id String @id @default(uuid())
   name String
@@ -32,19 +58,34 @@ model User {
 
   orders Order[]
   addresses Address[]
+  images Image[]
+  reviews Review[]
+  notifications Notification[]
 
   @@map("users")
 }
 
-model Category{
+model Store {
   id String @id @default(uuid())
   name String
+  description String
+  email String @unique
+  phone String
+  address String
+  cnpj String @unique
+  type String
+  openingHours String
+  status String
+  averageRating Float? @default(0)
+  licenses String?
   created_at DateTime? @default(now())
   updated_at DateTime? @default(now())
 
   products Product[]
+  images Image[]
+  reviews Review[]
 
-  @@map("categories")
+  @@map("stores")
 }
 
 model Product {
@@ -52,20 +93,21 @@ model Product {
   name String
   description String
   price Float
-  categoryId String
-  category Category @relation(fields: [categoryId], references: [id])
+  storeId String
+  store Store @relation(fields: [storeId], references: [id])
   created_at DateTime? @default(now())
   updated_at DateTime? @default(now())
 
   orderItems OrderItem[]
+  images Image[]
 
   @@map("products")
 }
 
 model Order {
   id String @id @default(uuid())
-  userId String
-  user User @relation(fields: [userId], references: [id])
+  customerId String
+  customer User @relation(fields: [customerId], references: [id])
   total Float
   status OrderStatus @default(PENDING)
   created_at DateTime? @default(now())
@@ -73,6 +115,7 @@ model Order {
 
   items OrderItem[]
   payments Payment[]
+  delivery Delivery?
 
   @@map("orders")
 }
@@ -91,8 +134,8 @@ model OrderItem {
 
 model Address {
   id String @id @default(uuid())
-  userId String
-  user User @relation(fields: [userId], references: [id])
+  customerId String
+  customer User @relation(fields: [customerId], references: [id])
   street String
   city String
   state String
@@ -115,4 +158,43 @@ model Payment {
   updated_at DateTime? @default(now())
 
   @@map("payments")
+}
+
+model Review {
+  id String @id @default(uuid())
+  userId String
+  storeId String
+  rating Int
+  comment String
+  created_at DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+  store Store @relation(fields: [storeId], references: [id])
+  images Image[]
+
+  @@map("reviews")
+}
+
+model Delivery {
+  id String @id @default(uuid())
+  orderId String @unique
+  status String
+  estimatedDelivery DateTime
+  actualDelivery DateTime?
+
+  order Order @relation(fields: [orderId], references: [id])
+  images Image[]
+
+  @@map("deliveries")
+}
+
+model Notification {
+  id String @id @default(uuid())
+  userId String
+  content String
+  created_at DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("notifications")
 }
