@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,14 +7,112 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum OrderStatus {
+  PENDING
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
 model User {
   id String @id @default(uuid())
   name String
-  email String
+  email String @unique
   password String
   created_at DateTime? @default(now())
   updated_at DateTime? @default(now())
 
+  orders Order[]
+  addresses Address[]
 
   @@map("users")
+}
+
+model Category{
+  id String @id @default(uuid())
+  name String
+  created_at DateTime? @default(now())
+  updated_at DateTime? @default(now())
+
+  products Product[]
+
+  @@map("categories")
+}
+
+model Product {
+  id String @id @default(uuid())
+  name String
+  description String
+  price Float
+  categoryId String
+  category Category @relation(fields: [categoryId], references: [id])
+  created_at DateTime? @default(now())
+  updated_at DateTime? @default(now())
+
+  orderItems OrderItem[]
+
+  @@map("products")
+}
+
+model Order {
+  id String @id @default(uuid())
+  userId String
+  user User @relation(fields: [userId], references: [id])
+  total Float
+  status OrderStatus @default(PENDING)
+  created_at DateTime? @default(now())
+  updated_at DateTime? @default(now())
+
+  items OrderItem[]
+  payments Payment[]
+
+  @@map("orders")
+}
+
+model OrderItem {
+  id String @id @default(uuid())
+  orderId String
+  order Order @relation(fields: [orderId], references: [id])
+  productId String
+  product Product @relation(fields: [productId], references: [id])
+  quantity Int
+  price Float
+
+  @@map("order_items")
+}
+
+model Address {
+  id String @id @default(uuid())
+  userId String
+  user User @relation(fields: [userId], references: [id])
+  street String
+  city String
+  state String
+  zipCode String
+  country String
+  created_at DateTime? @default(now())
+  updated_at DateTime? @default(now())
+
+  @@map("addresses")
+}
+
+model Payment {
+  id String @id @default(uuid())
+  orderId String
+  order Order @relation(fields: [orderId], references: [id])
+  amount Float
+  method String
+  status PaymentStatus @default(PENDING)
+  created_at DateTime? @default(now())
+  updated_at DateTime? @default(now())
+
+  @@map("payments")
 }
