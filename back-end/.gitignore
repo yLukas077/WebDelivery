@@ -1,0 +1,6 @@
+node_modules/
+.env
+prisma/migrations/
+*.lock
+.DS_Store
+.vscode/
