@@ -68,16 +68,14 @@ model User {
 model Store {
   id String @id @default(uuid())
   name String
+  password String
   description String
   email String @unique
   phone String
   address String
   cnpj String @unique
   type String
-  openingHours String
-  status String
   averageRating Float? @default(0)
-  licenses String?
   created_at DateTime? @default(now())
   updated_at DateTime? @default(now())
 
