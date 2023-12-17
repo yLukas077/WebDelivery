@@ -48,7 +48,7 @@ class CreateShopService {
                     email: true, 
                     description: true,
                     address: true,
-                    cnpj: true,
+                    cnpj: true, 
                     phone: true,
                     type: true
                 }
