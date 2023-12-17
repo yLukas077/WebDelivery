@@ -1,14 +1,6 @@
-# Build files
 node_modules/
-build/
-
-# Lock files
-package-lock.json
-*.lock
-
-# Env Files
 .env
-
-# Everything else ;)
+prisma/migrations/
+*.lock
 .DS_Store
 .vscode/
