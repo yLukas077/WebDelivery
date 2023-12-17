@@ -1,6 +1,14 @@
+# Build files
 node_modules/
-.env
-prisma/migrations/
+build/
+
+# Lock files
+package-lock.json
 *.lock
+
+# Env Files
+.env
+
+# Everything else ;)
 .DS_Store
 .vscode/
