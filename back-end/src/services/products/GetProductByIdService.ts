@@ -5,6 +5,7 @@ class GetProductByIdService {
     const product = await prismaClient.product.findUnique({
       where: { id },
       select: {
+        storeId: true,
         id: true,
         name: true,
         description: true,

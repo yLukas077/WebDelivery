@@ -31,6 +31,7 @@ class CreateProductService {
         storeId,
       },
       select: {
+        storeId: true,
         id: true,
         name: true,
         description: true,

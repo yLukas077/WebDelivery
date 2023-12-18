@@ -7,15 +7,22 @@ interface UpdateProductRequest {
   name?: string;
   description?: string;
   price?: number;
+  storeId: string;
 }
 
 class UpdateProductService {
-  async execute({ id, name, description, price }: UpdateProductRequest) {
+  async execute({ id, name, description, price, storeId }: UpdateProductRequest) {
+    // Verifica se a loja existe
+    const existingStore = await prismaClient.store.findUnique({
+      where: { id: storeId },
+    });
+    if (!existingStore) {
+      throw new Error('Store not found.');
+    }
+
     const existingProduct = await prismaClient.product.findUnique({
       where: { id },
     });
-
-    console.log("ID recebido:", id);
 
     if (!existingProduct) {
       throw new Error('Product not found.');
@@ -39,12 +46,14 @@ class UpdateProductService {
         name: name || existingProduct.name,
         description: description || existingProduct.description,
         price: price !== undefined ? price : existingProduct.price,
+        storeId, 
       },
       select: {
         id: true,
         name: true,
         description: true,
         price: true,
+        storeId: true,
       },
     });
 

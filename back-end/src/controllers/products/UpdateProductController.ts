@@ -3,7 +3,7 @@ import { UpdateProductService } from '../../services/products/UpdateProductServi
 
 class UpdateProductController {
     async handle(req: Request, res: Response) {
-        const { id } = req.params; // Assume que o ID do produto vem dos parâmetros da URL
+        const { id, storeId } = req.params; 
         const { name, description, price } = req.body;
 
         const updateProductService = new UpdateProductService();
@@ -11,6 +11,7 @@ class UpdateProductController {
         try {
             const updatedProduct = await updateProductService.execute({
                 id,
+                storeId,
                 name,
                 description,
                 price,
