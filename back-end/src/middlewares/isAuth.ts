@@ -1,35 +1,24 @@
-import { NextFunction, Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { verify } from 'jsonwebtoken';
 
-interface PayLoad{
+interface PayLoad {
     sub: string;
 }
 
-export function isAuth(
-    req: Request,
-    res: Response,
-    next: NextFunction
-){
-    const authToken = req.headers.authorization;
+export function isAuth(req: Request, res: Response, next: NextFunction) {
+    const token = req.cookies.token; 
 
-    if(!authToken){
-        return res.status(401).end;
+    if (!token) {
+        return res.status(401).end();
     }
 
-    const [, token] = authToken.split(" ");
+    try {
+        const { sub } = verify(token, process.env.JWT_SECRET as string) as PayLoad;
 
-    try{
-
-        const { sub } = verify(
-            token,
-            process.env.JWT_SECRET
-        ) as PayLoad;
-
-        req.user_id = sub;
+        (req as any).user_id = sub;
 
         return next();
-
-    }catch(err){
+    } catch (err) {
         return res.status(401).end();
     }
 }

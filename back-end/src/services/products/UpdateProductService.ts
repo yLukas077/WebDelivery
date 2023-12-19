@@ -12,7 +12,6 @@ interface UpdateProductRequest {
 
 class UpdateProductService {
   async execute({ id, name, description, price, storeId }: UpdateProductRequest) {
-    // Verifica se a loja existe
     const existingStore = await prismaClient.store.findUnique({
       where: { id: storeId },
     });

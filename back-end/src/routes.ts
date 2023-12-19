@@ -17,6 +17,7 @@ import { UpdateOrderStatusController } from './controllers/orders/UpdateOrderSta
 import { GetAllOrdersController } from './controllers/orders/GetAllOrdersController';
 import { GetOrderByIdController } from './controllers/orders/GetOrderByIdController';
 import { CreateOrderController } from './controllers/orders/CreateOrderController';
+import { LogoutController } from './controllers/any/LogoutController';
 
 const router = Router();
 
@@ -29,6 +30,9 @@ router.get('/userInfo', isAuth, new DetailUserController().handle)
 router.post('/shops', new CreateShopController().handle)
 router.post('/loginShop', new LoginShopController().handle)
 router.get('/shopInfo', isAuth, new DetailShopController().handle)
+
+//BOTH LOGOUT
+router.post('/logout', new LogoutController().handle);
 
 //PRODUCTS ROUTES
 router.post('/products', new CreateProductController().handle)

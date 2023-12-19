@@ -22,7 +22,6 @@ class CreateOrderService {
       throw new Error('Invalid order items.');
     }
 
-    // Recuperar os preços dos produtos do banco de dados
     const itemsWithPrices = await Promise.all(items.map(async (item) => {
       const product = await prismaClient.product.findUnique({
         where: { id: item.productId },
