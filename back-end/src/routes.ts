@@ -18,6 +18,8 @@ import { GetAllOrdersController } from './controllers/orders/GetAllOrdersControl
 import { GetOrderByIdController } from './controllers/orders/GetOrderByIdController';
 import { CreateOrderController } from './controllers/orders/CreateOrderController';
 import { LogoutController } from './controllers/any/LogoutController';
+import { VerifyEmailController } from './controllers/user/VerifyEmailController';
+import { ResendVerificationCodeController } from './controllers/user/ResendVerificationCodeController';
 
 const router = Router();
 
@@ -25,6 +27,8 @@ const router = Router();
 router.post('/users', new CreateUserController().handle)
 router.post('/loginUser', new LoginUserController().handle)
 router.get('/userInfo', isAuth, new DetailUserController().handle)
+router.post('/verifyEmail', new VerifyEmailController().handle)
+router.post('/resendEmail', new ResendVerificationCodeController().handle);
 
 //SHOP ROUTES
 router.post('/shops', new CreateShopController().handle)

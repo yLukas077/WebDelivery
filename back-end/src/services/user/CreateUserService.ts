@@ -1,45 +1,58 @@
 import prismaClient from '../../prisma';
 import { hash } from 'bcryptjs';
+import { EmailAuth } from '../../utils/auths/EmailAuth';
 
-interface UserRequest{
+interface UserRequest {
     name: string;
     email: string;
     password: string;
 }
 
-class CreateUserService{
-    async execute({name, email, password}: UserRequest){
-        if(!email){
-            throw new Error('Email incorrect')
+function generateRandomCode() {
+    const min = 100000;
+    const max = 999999;
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+class CreateUserService {
+    async execute({name, email, password}: UserRequest) {
+        if (!email) {
+            throw new Error('Email incorrect');
         }
 
         const userAlreadyExists = await prismaClient.user.findFirst({
-            where:{
+            where: {
                 email: email
             }
-        })
+        });
 
-        if (userAlreadyExists){
-            throw new Error('User already exists')
+        if (userAlreadyExists) {
+            throw new Error('User already exists');
         }
 
-        const passwordHash = await hash(password, 8)
+        const passwordHash = await hash(password, 8);
+        const verificationCode = generateRandomCode().toString();
 
         const user = await prismaClient.user.create({
-            data:{
+            data: {
                 name: name,
                 email: email,
-                password: passwordHash
+                password: passwordHash,
+                verificationCode: verificationCode,
+                verificationCodeSentAt: new Date()
             },
-            select:{
+            select: {
                 id: true,
                 name: true,
                 email: true
             }
-        })
+        });
 
-        return { user }
+        const emailService = new EmailAuth();
+        await emailService.sendVerificationCode(email, verificationCode);
+
+        return user;
     }
 }
 
-export { CreateUserService }
+export { CreateUserService };

@@ -12,9 +12,8 @@ const NavItems = () => {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
   const categories: Category[] = [
-    { name: 'Sobre Nós', href: '/about' },
-    { name: 'Regiões que Atendemos', href: '/regions' },
-    { name: 'Nossos Planos', href: '/plans' },
+    { name: 'Entrar como estabelecimento', href: '/shopLogin' },
+    { name: 'Entrar como cliente', href: '/userLogin' }
   ];
 
   return (

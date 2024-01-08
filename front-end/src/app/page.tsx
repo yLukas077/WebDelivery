@@ -1,3 +1,4 @@
+import AnimatedText from "@/components/AnimatedText";
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import { buttonVariants } from "@/components/ui/button";
 import { ClipboardSignature, LayoutList, PiggyBank } from "lucide-react";
@@ -28,8 +29,12 @@ export default function Home() {
       <MaxWidthWrapper>
         <div className="py-20 mx-auto text-center flex flex-col items-center max-w-3xl">
           <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
-            Seu site favorito para{' '}
-            <span className="text-purple-600">pedir comida</span>
+            Seu site favorito para pedir{' '}
+            <span className="text-purple-600">
+              <AnimatedText 
+              strings={["lanches", "pratos completos", "itens de supermercado"]} 
+              />
+            </span>
           </h1>
           <p className="mt-6 text-lg max-w-prose text-muted-foreground">
             Pedidos rápidos? taxas baixas? uso simples? Tudo isso e muito mais com apenas alguns cliques.

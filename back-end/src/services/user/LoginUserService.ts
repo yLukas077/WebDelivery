@@ -18,6 +18,10 @@ class LoginUserService {
             throw new Error('User or password incorrect');
         }
 
+        if (!user.emailVerified) {
+            throw new Error('E-mail not verified');
+        }
+
         const passwordMatch = await compare(password, user.password);
 
         if (!passwordMatch) {
@@ -32,7 +36,7 @@ class LoginUserService {
 
         res.cookie('token', token, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'development',
+            secure: process.env.NODE_ENV !== 'development',
             sameSite: 'strict'
         });
 
